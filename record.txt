@@ -1,0 +1,10 @@
+shiro的配置类：
+    shiro过滤器的配置（定义ShiroFileterFactorBean）:
+        设置security manager：加载自定义realm，realm必须通过@Bean使用spring注入。
+            多个realm的时候，可以通过设置认证规则来进行认证，共3种：至少一个成功，全部成功，第一个成功后忽视其它relm并认证成功。
+        设置默认的登录地址
+        设置登录成功后跳转的连接
+        设置未授权的界面地址
+
+        设置自定义拦截器
+        设置拦截规则

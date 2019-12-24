@@ -42,6 +42,7 @@ public class ShiroConfig {
         Map<String, String> filterRuleMap = new HashMap<>();
         //访问/login和/unauthorized 不需要经过过滤器
         filterRuleMap.put("/login", "anon");
+//        filterRuleMap.put("/index/**", "anon");
         filterRuleMap.put("/unauthorized/**", "anon");
         // 所有请求通过我们自己的JWT Filter
         filterRuleMap.put("/**", "jwt");

@@ -18,40 +18,40 @@ import java.util.Map;
  * @Author yjwu
  * @Date 2019/12/23 14:08
  **/
-@ControllerAdvice
+//@ControllerAdvice
 public class GlobalExceptionHandler {
 
 
-    /**
-     * Handle 401 api result.
-     * 捕捉shiro的异常
-     *
-     * @return the api result
-     */
-    @ExceptionHandler(ShiroException.class)
-    public ResultBean handle401() {
-        return new ResultBean(401, "您没有权限访问！", null);
-    }
-
-    /**
-     * Global exception api result.
-     * 捕捉其他所有异常
-     *
-     * @param request the request
-     * @param ex      the ex
-     * @return the api result
-     */
-    @ExceptionHandler(Exception.class)
-    public ResultBean globalException(HttpServletRequest request, Throwable ex) {
-        ex.printStackTrace();
-        return new ResultBean(401, "访问出错，无法访问: " + ex.getMessage(), null);
-    }
-
-    private HttpStatus getStatus(HttpServletRequest request) {
-        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        if (statusCode == null) {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return HttpStatus.valueOf(statusCode);
-    }
+//    /**
+//     * Handle 401 api result.
+//     * 捕捉shiro的异常
+//     *
+//     * @return the api result
+//     */
+//    @ExceptionHandler(ShiroException.class)
+//    public ResultBean handle401() {
+//        return new ResultBean(401, "您没有权限访问！", null);
+//    }
+//
+//    /**
+//     * Global exception api result.
+//     * 捕捉其他所有异常
+//     *
+//     * @param request the request
+//     * @param ex      the ex
+//     * @return the api result
+//     */
+//    @ExceptionHandler(Exception.class)
+//    public ResultBean globalException(HttpServletRequest request, Throwable ex) {
+//        ex.printStackTrace();
+//        return new ResultBean(401, "访问出错，无法访问: " + ex.getMessage(), null);
+//    }
+//
+//    private HttpStatus getStatus(HttpServletRequest request) {
+//        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+//        if (statusCode == null) {
+//            return HttpStatus.INTERNAL_SERVER_ERROR;
+//        }
+//        return HttpStatus.valueOf(statusCode);
+//    }
 }
