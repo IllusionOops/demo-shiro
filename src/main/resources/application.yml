@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8080
   tomcat:
     uri-encoding: UTF-8
 spring:
@@ -38,12 +38,12 @@ spring:
       url: jdbc:mysql://127.0.0.1:3306/mytest?serverTimezone=UTC
       username: root
       password: 141535
-  devtools:
-    restart:
-      # additional-paths: src/main/resource/
-      trigger-file: trigger.txt
-      enabled: true
-      exclude: WEB-INF/**
+  #  devtools:
+  #    restart:
+  #      # additional-paths: src/main/resource/
+  #      trigger-file: trigger.txt
+  #      enabled: true
+  #      exclude: WEB-INF/**
   http:
     encoding:
       charset: UTF-8

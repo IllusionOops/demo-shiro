@@ -7,14 +7,18 @@ import com.wyj.entity.UserRole;
 import com.wyj.service.UserService;
 import com.wyj.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.build.Plugin;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName UserRealm
@@ -27,6 +31,9 @@ public class UserRealm extends AuthorizingRealm {
     @Autowired
     UserService userService;
     private static final String encryptSalt = "F12839WhsnnEV$#23b";
+    @Autowired
+    @Qualifier("strRedisTemplate")
+    private RedisTemplate redisTemplate;
 
     /**
      * 必须重写此方法，不然会报错
@@ -52,17 +59,24 @@ public class UserRealm extends AuthorizingRealm {
 //        return new SimpleAuthenticationInfo(user, user.getPassword(), ByteSource.Util.bytes(encryptSalt), getName());
 
         String token = (String) authenticationToken.getCredentials();
-        // 解密获得username，用于和数据库进行对比
-        String username = JWTUtil.getUsername(token);
-        if (username == null || !JWTUtil.verify(token, username)) {
-            throw new AuthenticationException("token认证失败！");
-        }
-        User userByUsername = userService.findUserByUsername(username);
-        if (userByUsername == null) {
-            throw new AuthenticationException("该用户不存在！");
-        }
+        if (redisTemplate.hasKey(token)){
 
+        }else{
+            // 解密获得username，用于和数据库进行对比
+            String username = JWTUtil.getUsername(token);
+            if (username == null || !JWTUtil.verify(token, username)) {
+                throw new AuthenticationException("token认证失败！");
+            }
+            User userByUsername = userService.findUserByUsername(username);
+            if (userByUsername == null) {
+                throw new AuthenticationException("该用户不存在！");
+            }else{
+                redisTemplate.opsForValue().set(token,token,3, TimeUnit.MINUTES);
+            }
+        }
         return new SimpleAuthenticationInfo(token, token, getName());
+
+
     }
 
     /**
@@ -71,6 +85,9 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         System.out.println("————权限认证开始————");
+        Subject subject = SecurityUtils.getSubject();
+        subject.getSession(true);
+        String principal = (String)subject.getPrincipal();
         String username = JWTUtil.getUsername(principals.toString());
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         // 此处最好使用缓存提升速度

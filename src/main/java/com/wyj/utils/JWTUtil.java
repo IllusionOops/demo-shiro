@@ -18,7 +18,7 @@ public class JWTUtil {
     /**
      * 过期时间 24 小时
      */
-    private static final long EXPIRE_TIME = 60 * 24 * 60 * 1000;
+    private static final long EXPIRE_TIME = 3 * 60 * 1000;
     /**
      * 密钥，注意这里如果真实用到，应当设置到复杂点，相当于私钥的存在。如果被人拿到，想到于它可以自己制造token了。
      */

@@ -47,9 +47,8 @@ public class LoginController {
 //            //Shiro认证通过后会将user信息放到subject内，生成token并返回
 //            User user = (User) subject.getPrincipal();
 //            String newToken = JWTUtil.createToken(username);
-//
 //            return new ResultBean(200, "登录成功", JWTUtil.createToken(username));
-
+            Subject subject = SecurityUtils.getSubject();
             User userByUsername = userService.findUserByUsername(username);
             String newPs = new SimpleHash("MD5", password, "abcdefg", 2).toHex();
             if (userByUsername == null) {
@@ -66,15 +65,18 @@ public class LoginController {
             return new ResultBean(500, "系统错误", null);
         }
     }
-    @RequiresRoles(value = {"admin"})
-    @PostMapping("/index")
-    public Integer index(int numger, HttpServletResponse response) {
-        Integer result = 0;
+
+    @PostMapping("/logout")
+    @ApiOperation(value = "用户登出接口", notes = "", response = ResultBean.class)
+
+    public String logout(HttpServletResponse response) {
+        String result = "ok";
         try {
-            result = 9 / numger;
+            Subject subject = SecurityUtils.getSubject();
+            subject.logout();
         } catch (Exception e) {
             e.printStackTrace();
-            result = null;
+            result = "not ok";
             throw new RuntimeException();
         }
         return result;

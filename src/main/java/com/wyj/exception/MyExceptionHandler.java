@@ -17,6 +17,6 @@ public class MyExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public ResultBean exceptionHandler(Exception e) {
-        return new ResultBean(500, "异常被捕获", e.getMessage());
+        return new ResultBean(500, "--异常被捕获", e.getMessage());
     }
 }

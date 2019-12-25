@@ -1,6 +1,8 @@
 package com.wyj.controller;
 
 import com.wyj.bean.ResultBean;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/index")
 public class IndexController {
 
+    @RequiresRoles(value = "admin")
     @RequestMapping(value = "/test1",method = RequestMethod.GET)
     public ResultBean test1(@RequestParam("param") int param){
         return new ResultBean(200,"success",10/param);
@@ -20,7 +23,9 @@ public class IndexController {
 
     @GetMapping(value = "/test2")
     public ResultBean test2(@RequestParam("param") int param){
-        return new ResultBean(200,"success",10/param);
+        String newPs = new SimpleHash("MD5", "123", "abcdefg", 2).toHex();
+        System.out.println("newPs====="+newPs);
+        return new ResultBean(200,newPs,10/param);
     }
 
 }
