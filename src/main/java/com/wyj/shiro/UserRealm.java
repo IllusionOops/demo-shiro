@@ -11,9 +11,12 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -59,24 +62,17 @@ public class UserRealm extends AuthorizingRealm {
 //        return new SimpleAuthenticationInfo(user, user.getPassword(), ByteSource.Util.bytes(encryptSalt), getName());
 
         String token = (String) authenticationToken.getCredentials();
-        if (redisTemplate.hasKey(token)){
-
-        }else{
-            // 解密获得username，用于和数据库进行对比
-            String username = JWTUtil.getUsername(token);
-            if (username == null || !JWTUtil.verify(token, username)) {
-                throw new AuthenticationException("token认证失败！");
-            }
-            User userByUsername = userService.findUserByUsername(username);
-            if (userByUsername == null) {
-                throw new AuthenticationException("该用户不存在！");
-            }else{
-                redisTemplate.opsForValue().set(token,token,3, TimeUnit.MINUTES);
-            }
+        // 解密获得username，用于和数据库进行对比
+        String username = JWTUtil.getUsername(token);
+        if (username == null || !JWTUtil.verify(token, username)) {
+            throw new AuthenticationException("token认证失败！");
         }
+        User userByUsername = userService.findUserByUsername(username);
+        if (userByUsername == null) {
+            throw new AuthenticationException("该用户不存在！");
+        }
+
         return new SimpleAuthenticationInfo(token, token, getName());
-
-
     }
 
     /**
@@ -87,7 +83,7 @@ public class UserRealm extends AuthorizingRealm {
         System.out.println("————权限认证开始————");
         Subject subject = SecurityUtils.getSubject();
         subject.getSession(true);
-        String principal = (String)subject.getPrincipal();
+        String principal = (String) subject.getPrincipal();
         String username = JWTUtil.getUsername(principals.toString());
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         // 此处最好使用缓存提升速度
