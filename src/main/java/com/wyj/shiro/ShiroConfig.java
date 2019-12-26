@@ -89,7 +89,6 @@ public class ShiroConfig {
         filterRuleMap.put("/login", "anon");
         //logout是shiro提供的过滤器
         filterRuleMap.put("/logout", "logout");
-        filterRuleMap.put("/index/**", "anon");
         filterRuleMap.put("/unauthorized/**", "anon");
         filterRuleMap.put("/swagger-**/**", "anon");
         //此时访问/userInfo/del需要del权限,在自定义Realm中为用户授权。

@@ -87,7 +87,7 @@ public class UserRealm extends AuthorizingRealm {
         String username = JWTUtil.getUsername(principals.toString());
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         // 此处最好使用缓存提升速度
-        User userByUsername = userService.findUserByUsername(username);
+        User userByUsername = userService.findUserRolePermissionByUsername(username);
         if (userByUsername == null || userByUsername.getUserRoleList().isEmpty()) {
             return authorizationInfo;
         }

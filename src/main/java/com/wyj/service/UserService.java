@@ -55,8 +55,13 @@ public class UserService {
     public User findUserById(String uId) {
         return userDAO.selectByPrimaryKey(Integer.valueOf(uId));
     }
+
     public User findUserByUsername(String username) {
         return userDAO.selectByUsername(username);
+    }
+
+    public User findUserRolePermissionByUsername(String username) {
+        return userDAO.selectUserRolePermissionByUsername(username);
     }
 
 }
