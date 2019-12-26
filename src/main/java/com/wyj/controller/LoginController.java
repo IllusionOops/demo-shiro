@@ -16,6 +16,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -36,8 +37,11 @@ public class LoginController {
             @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String"),
             @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String")
     })
-    public ResultBean login(@RequestParam("username") String username,
-                            @RequestParam("password") String password, HttpServletResponse response) {
+    public ResultBean login(HttpServletRequest request, HttpServletResponse response,
+                            @RequestParam("username") String username,
+                            @RequestParam("password") String password,
+                            @RequestParam("rememberMe") boolean rememberMe
+                            ) {
         ResultBean resultBean = new ResultBean();
         try {
 //            Subject subject = SecurityUtils.getSubject();
@@ -47,8 +51,9 @@ public class LoginController {
 //            //Shiro认证通过后会将user信息放到subject内，生成token并返回
 //            User user = (User) subject.getPrincipal();
 //            String newToken = JWTUtil.createToken(username);
+//
 //            return new ResultBean(200, "登录成功", JWTUtil.createToken(username));
-            Subject subject = SecurityUtils.getSubject();
+
             User userByUsername = userService.findUserByUsername(username);
             String newPs = new SimpleHash("MD5", password, "abcdefg", 2).toHex();
             if (userByUsername == null) {

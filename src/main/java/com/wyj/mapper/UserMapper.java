@@ -35,7 +35,7 @@ public interface UserMapper {
             "from t_user",
             "where username = #{username,jdbcType=INTEGER}"
     })
-    @Results({@Result(column = "id",property = "userRoleList",many = @Many(select = "com.wyj.mapper.UserRoleMapper.selectByUserId"))})
+    @Results({@Result(column = "id",property = "id",id = true),@Result(column = "id",property = "userRoleList",many = @Many(select = "com.wyj.mapper.UserRoleMapper.selectByUserId"))})
     User selectByUsername(String username);
 
     int updateByPrimaryKeySelective(User record);

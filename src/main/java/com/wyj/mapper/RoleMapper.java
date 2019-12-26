@@ -27,7 +27,7 @@ public interface RoleMapper {
         "from t_role",
         "where id = #{id,jdbcType=INTEGER}"
     })
-    @Results({@Result(column = "id",property = "rolePermissionList",one = @One(select = "com.wyj.mapper.RolePermissionMapper.selectByRoleId"))})
+    @Results({@Result(column = "id",property = "id",id = true),@Result(column = "id",property = "rolePermissionList",one = @One(select = "com.wyj.mapper.RolePermissionMapper.selectByRoleId"))})
     Role selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Role record);

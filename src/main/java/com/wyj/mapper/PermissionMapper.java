@@ -27,6 +27,7 @@ public interface PermissionMapper {
         "from t_permission",
         "where id = #{id,jdbcType=INTEGER}"
     })
+    @Results({@Result(column = "id",property = "id",id = true)})
     Permission selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Permission record);
